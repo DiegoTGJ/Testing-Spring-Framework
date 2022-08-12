@@ -1,13 +1,14 @@
 package org.springframework.samples.petclinic.springctx;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by Diego T. 12-08-2022
  */
+@Profile("yanny")
 @Component
-@Primary
 public class YannyWordProducer implements WordProducer{
     @Override
     public String getWord() {
