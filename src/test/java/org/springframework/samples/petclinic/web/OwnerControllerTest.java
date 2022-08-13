@@ -112,9 +112,47 @@ class OwnerControllerTest {
         mockMvc.perform(post("/owners/new")
                 .param("firstName","Jimmy")
                 .param("lastName","BBuffett")
-                .param("Address","123 Duval St")
+                .param("address","123 Duval St")
                 .param("city", "Key West")
                 .param("telephone","3151231234"))
             .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    void processCreationFormNotValidTest() throws Exception {
+        mockMvc.perform(post("/owners/new")
+                        .param("firstName","Jimmy")
+                        .param("lastName","BBuffett")
+                        .param("address","")
+                        .param("city", "")
+                        .param("telephone","3151231234"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasErrors("owner"))
+                .andExpect(model().attributeHasFieldErrors("owner","address"))
+                .andExpect(model().attributeHasFieldErrors("owner","city"))
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"));
+    }
+
+    @Test
+    void processUpdateFormValidTest() throws Exception {
+        mockMvc.perform(post("/owners/{ownerId}/edit",1)
+                        .param("firstName","Jimmy")
+                        .param("lastName","BBuffett")
+                        .param("address","asd")
+                        .param("city", "asdsad")
+                        .param("telephone","3151231234"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/{ownerId}"));
+    }
+    @Test
+    void processUpdateFormNotValidTest() throws Exception {
+        mockMvc.perform(post("/owners/{ownerId}/edit",1)
+                        .param("firstName","Jimmy")
+                        .param("lastName","BBuffett")
+                        .param("address","")
+                        .param("city", "")
+                        .param("telephone","3151231234"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM));
     }
 }
