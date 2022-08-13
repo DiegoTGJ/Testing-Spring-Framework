@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
@@ -106,5 +105,16 @@ class OwnerControllerTest {
         then(clinicService).should().findOwnerByLastName(stringArgumentCaptor.capture());
 
         assertThat(stringArgumentCaptor.getValue()).isEqualToIgnoringCase("");
+    }
+
+    @Test
+    void processCreationFormValidTest() throws Exception {
+        mockMvc.perform(post("/owners/new")
+                .param("firstName","Jimmy")
+                .param("lastName","BBuffett")
+                .param("Address","123 Duval St")
+                .param("city", "Key West")
+                .param("telephone","3151231234"))
+            .andExpect(status().is3xxRedirection());
     }
 }
